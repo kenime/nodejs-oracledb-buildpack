@@ -4,16 +4,12 @@ install_oracle_libraries(){
   echo "Installing oracle libraries"
   mkdir -p $build_dir/oracle
   cd $build_dir/oracle
-  local basic_download_url="https://transfer.sh/xWc2U/instantclient-basiclite.zip"
-  local sdk_download_url="https://transfer.sh/9dzwj/instantclient-sdk.zip"
-  curl -k "$basic_download_url" --silent --fail --retry 5 --retry-max-time 15 -o instantclient-basic.zip
-  echo "Downloaded [$basic_download_url]"
-  curl -k "$sdk_download_url" --silent --fail --retry 5 --retry-max-time 15 -o instantclient-sdk.zip
-  echo "Downloaded [$sdk_download_url]"
+  cp $BUILDPACK_PATH/instantclient.zip instantclient.zip
+  pwd
+  local basic_download_url="https://test.com"
   echo "unzipping libraries"
-  unzip instantclient-basic.zip
-  unzip instantclient-sdk.zip
-  mv instantclient_12_1 instantclient
+  unzip instantclient.zip
+  mv instantclient_12_2 instantclient
   cd instantclient
   ln -s libclntsh.so.12.1 libclntsh.so
 }
@@ -36,7 +32,6 @@ run_if_present() {
   local has_script=$(read_json "$BUILD_DIR/package.json" ".scripts[\"$script_name\"]")
   if [ -n "$has_script" ]; then
     if $YARN; then
-      echo "Running $script_name (yarn)"
       yarn run "$script_name"
     else
       echo "Running $script_name"
